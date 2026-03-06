@@ -1,49 +1,42 @@
-import { defineConfig, transformWithEsbuild } from 'vite';
-import react from '@vitejs/plugin-react';
-import legacy from '@vitejs/plugin-legacy';
+import { defineConfig, transformWithEsbuild } from "vite";
+import react from "@vitejs/plugin-react";
+import legacy from "@vitejs/plugin-legacy";
 
 function handleModuleDirectivesPlugin() {
   return {
-    name: 'handle-module-directives-plugin',
+    name: "handle-module-directives-plugin",
     transform(code, id) {
-      if (id.includes('@vkontakte/icons')) {
-        code = code.replace(/"use-client";?/g, '');
+      if (id.includes("@vkontakte/icons")) {
+        code = code.replace(/"use-client";?/g, "");
       }
       return { code };
     },
   };
 }
 
-function threatJsFilesAsJsx() {
+function treatJsFilesAsJsx() {
   return {
-    name: 'treat-js-files-as-jsx',
+    name: "treat-js-files-as-jsx",
     async transform(code, id) {
       if (!id.match(/src\/.*\.js$/)) return null;
 
       return transformWithEsbuild(code, id, {
-        loader: 'jsx',
-        jsx: 'automatic',
+        loader: "jsx",
+        jsx: "automatic",
       });
     },
   };
 }
 
-/**
- * Some chunks may be large.
- * This will not affect the loading speed of the site.
- * We collect several versions of scripts that are applied depending on the browser version.
- * This is done so that your code runs equally well on the site and in the odr.
- * The details are here: https://dev.vk.ru/mini-apps/development/on-demand-resources.
- */
 export default defineConfig({
-  base: './',
+  base: "./",
 
   plugins: [
     react(),
-    threatJsFilesAsJsx(),
+    treatJsFilesAsJsx(),
     handleModuleDirectivesPlugin(),
     legacy({
-      targets: ['defaults', 'not IE 11'],
+      targets: ["defaults", "not IE 11"],
     }),
   ],
 
@@ -51,12 +44,12 @@ export default defineConfig({
     force: true,
     esbuildOptions: {
       loader: {
-        '.js': 'jsx',
+        ".js": "jsx",
       },
     },
   },
 
   build: {
-    outDir: 'build',
-  },
+    outDir: "dist"
+  }
 });

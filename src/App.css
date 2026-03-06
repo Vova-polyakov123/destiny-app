@@ -1,0 +1,16 @@
+body {
+    background: black;
+    color: white;
+    font-family: Arial;
+}
+
+body {
+    background: black;
+    color: white;
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
